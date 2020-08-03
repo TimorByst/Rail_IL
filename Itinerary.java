@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+package Rail_IL;
+
+>>>>>>> 5ace76e838a9d065d02b7ec0db6b39ad400a97e5
 public class Itinerary {
 	
 	private String originStation,departureTime,ETA,destinationStation;
