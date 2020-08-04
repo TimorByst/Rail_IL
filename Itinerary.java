@@ -2,7 +2,7 @@ public class Itinerary {
 	
 	private String originStation,departureTime,ETA,destinationStation;
 
-	public Itinerary(String originStation,String departureTime,String ETA,String destinationStation) {
+	public Itinerary(String originStation,String departureTime,String destinationStation,String ETA) {
 		this.originStation=originStation;
 		this.departureTime=departureTime;
 		this.ETA=ETA;
