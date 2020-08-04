@@ -1,16 +1,15 @@
-<<<<<<< HEAD
-=======
-package Rail_IL;
-
->>>>>>> 5ace76e838a9d065d02b7ec0db6b39ad400a97e5
 public class Itinerary {
 	
 	private String originStation,departureTime,ETA,destinationStation;
 
-	public Itinerary() {
-		// Empty on purpose - default constructor.
+	public Itinerary(String originStation,String departureTime,String ETA,String destinationStation) {
+		this.originStation=originStation;
+		this.departureTime=departureTime;
+		this.ETA=ETA;
+		this.destinationStation=destinationStation;
 	}
 
+	
 	public String getOriginStation() {
 		return originStation;
 	}
@@ -31,8 +30,8 @@ public class Itinerary {
 		return ETA;
 	}
 
-	public void setETA(String eTA) {
-		ETA = eTA;
+	public void setETA(String ETA) {
+		this.ETA = ETA;
 	}
 
 	public String getDestinationStation() {
@@ -46,7 +45,7 @@ public class Itinerary {
 	@Override
 	public String toString() {
 		return  originStation + " (" + departureTime + ") ----> " + destinationStation
-				+ " (" + ETA +").";
+				+ " (" + ETA +")";
 	}
 	
 	

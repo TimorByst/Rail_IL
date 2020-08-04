@@ -8,55 +8,35 @@ public class Rail {
 	public static void main(String[] args) {
 		int choice;
 		Scanner input = new Scanner(System.in);
-		
-//		String text = "1\n" +
-//				"Tel Aviv-HaHagana\n"+         
-//				"16:12\n"+       
-//				"Be'er Sheva-North/University\n"+ 
-//				"18:05\n"+
-//				"1\n"+                
-//				"Tel Aviv-HaHagana\n"+            
-//				"15:19\n"+          
-//				"Jerusalem - Yitzhak Navon\n"+    
-//				"15:55\n"+ 
-//				"2\n"
-//				+ "9";
-
-		System.out.println("Hello and welcome to Israel Railway");
+		System.out.println("=================================================");
+		System.out.println("Welcome Admin to Israel Railway Schedule Program.");
+		System.out.println("=================================================");
 
 		do {
-			System.out.println("how would you like to proceed?\n" + "1. Append itinerary.\n"
-					+ "2. Display all itineraries. \n" + "9. Exit program. ");
+			System.out.println("How would you like to proceed?\n" + "(1) Append itinerary.\n"
+					+ "(2) Display all itineraries. \n" + "(9) Exit program. ");
+			System.out.println("=================================================");
+			
 			choice = Integer.parseInt(input.nextLine());
-
+			
 			switch (choice) {
-
-			case 1:
-
-				Itinerary a = new Itinerary();
-				a.setOriginStation(input.nextLine());
-				a.setDepartureTime(input.nextLine());
-				a.setDestinationStation(input.nextLine());
-				a.setETA(input.nextLine());
-				allItineraries.add(a);
-				sort();
-
-				break;
-
-			case 2:
-
-				for (Itinerary i : allItineraries) {
-					System.out.println(i.toString());
-				}
-				break;
-
+				case 1:
+					Itinerary a = new Itinerary(input.nextLine(),input.nextLine(),input.nextLine(),input.nextLine());
+					allItineraries.add(a);
+					sortByDepartureTime();
+					break;
+	
+				case 2:
+					for (Itinerary i : allItineraries)
+						System.out.println(i.toString());
+					break;
 			}
 		} while (choice != 9);
+		System.out.println("------------------------------------PROGRAM TERMINATED----------------------------------------------");
 		input.close();
-
 	}
 
-	public static void sort() {
+	public static void sortByDepartureTime() {
 		boolean repeat;
 		Itinerary temp = null;
 		String[] time1, time2;
@@ -71,7 +51,6 @@ public class Rail {
 					allItineraries.set(i + 1, temp);
 					repeat = true;
 				}
-
 				else if (Integer.parseInt(time1[0]) == Integer.parseInt(time2[0]))
 					if (Integer.parseInt(time1[1]) > Integer.parseInt(time2[1])) {
 						temp = allItineraries.set(i, allItineraries.get(i + 1));
