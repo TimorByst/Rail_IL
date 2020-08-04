@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,7 +17,9 @@ public class Rail {
 
 		do {
 			System.out.println("How would you like to proceed?\n" + "(1) Append itinerary.\n"
-					+ "(2) Display all itineraries. \n" + "(9) Exit program. ");
+					+ "(2) Display all itineraries.\n"
+					+ "(3) Save Existing Itineraries to file. (WILL OVERWRITE!)\n"
+					+ "(4) Load From Itineraries file\n" + "(9) Exit program.");
 			System.out.println("=================================================");
 			
 			choice = Integer.parseInt(input.nextLine());
@@ -29,6 +34,51 @@ public class Rail {
 				case 2:
 					for (Itinerary i : allItineraries)
 						System.out.println(i.toString());
+					break;
+					
+				case 3:
+					if(allItineraries.size()>0)
+						try {
+							PrintWriter write = new PrintWriter(new File("./output.txt"));
+							for(Itinerary i : allItineraries) {
+								write.println(i.toString());
+							}
+							write.flush();
+							write.close();
+							System.out.println("SAVED SUCCESSFULLY!");
+						} catch (FileNotFoundException e) {
+							System.out.println("OUTPUT FILE NOT FOUND!");
+							e.printStackTrace();
+						}
+					else
+						System.out.println("Fill in some itineraries first.");
+					
+					break;
+					
+				case 4:
+				try {
+					Scanner read = new Scanner(new File("./output.txt"));
+					String line,origin,t1,des,t2;
+					String temp[];
+					while(read.hasNext()) {
+						line = read.nextLine();
+						if(!line.isEmpty()) {
+							temp = line.split(" ----> ");
+							for(String x : temp)
+								System.out.println(x);
+							origin = temp[0].substring(0,temp[0].indexOf("(")-1);
+							t1 = temp[0].substring(temp[0].indexOf("(")+1,temp[0].indexOf(")"));
+							des = temp[1].substring(0,temp[1].indexOf("(")-1);
+							t2 = temp[1].substring(temp[1].indexOf("(")+1,temp[1].indexOf(")"));
+							allItineraries.add(new Itinerary(origin,t1,des,t2));
+						}
+					}
+					read.close();
+					System.out.println("LOADED SUCCESSFULLY!");
+				} catch (FileNotFoundException e) {
+					System.out.println("READ FILE NOT FOUND!");
+					e.printStackTrace();
+				}
 					break;
 			}
 		} while (choice != 9);
