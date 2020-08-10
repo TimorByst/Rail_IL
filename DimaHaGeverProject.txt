@@ -1,13 +1,34 @@
 1
-Tel-Aviv Ha'Hagana
+Tel-Aviv University
 16:12
 Be'er Sheva North/University
 18:05
+Y
+Tel-Aviv Svidor Center
+16:17
+Y
+Tel-Aviv Ha'Shalom
+16:23
+Y
+Tel-Aviv Ha'Hagana
+16:28
+N
 1
 Tel-Aviv Ha'Hagana
 15:19
 Jerusalem Yitzhak Navon
 15:55
+N
 2
 3
+Tel-Aviv University
+Be'er Sheva North/University
+1
+16:44
+3
+Tel-Aviv University
+Be'er Sheva North/University
+2
+19:15
+4
 9

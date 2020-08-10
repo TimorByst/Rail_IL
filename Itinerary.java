@@ -1,12 +1,19 @@
+import java.util.ArrayList;
+
 public class Itinerary {
 	
 	private String originStation,departureTime,ETA,destinationStation;
+	private ArrayList<String> midStations;
+	private ArrayList<String> schedule;
+	
 
 	public Itinerary(String originStation,String departureTime,String destinationStation,String ETA) {
 		this.originStation=originStation;
 		this.departureTime=departureTime;
 		this.ETA=ETA;
 		this.destinationStation=destinationStation;
+		midStations = new ArrayList<String>();
+		schedule = new ArrayList<String>();
 	}
 
 	
@@ -41,17 +48,20 @@ public class Itinerary {
 	public void setDestinationStation(String destinationStation) {
 		this.destinationStation = destinationStation;
 	}
+	
+	public void addMidStation(String name, String ETA) {
+		midStations.add(name);
+		schedule.add(ETA);
+	}
 
 	@Override
 	public String toString() {
-		return  originStation + " (" + departureTime + ") ----> " + destinationStation
-				+ " (" + ETA +")";
+		StringBuilder sb = new StringBuilder();
+		 sb.append(originStation + " (" + departureTime + ") ---> " + destinationStation
+				+ " (" + ETA +")\n");
+		 for(int i = 0 ; i < midStations.size(); i++) 
+			 sb.append("--- " + midStations.get(i) +" (" + schedule.get(i) +")\n");
+		 sb.deleteCharAt(sb.length()-1);
+		 return sb.toString();
 	}
-	
-	
-	
-	
-	
-	
-
 }
