@@ -124,7 +124,7 @@ public class Rail {
 				System.out.println("SAVED SUCCESSFULLY!");
 				break;
 
-//			case 5:
+//			case 5: 
 //				try {
 //					Scanner read = new Scanner(new File("./output.txt"));
 //					String line, origin, t1, des, t2;
@@ -132,7 +132,7 @@ public class Rail {
 //					while (read.hasNext()) {
 //						line = read.nextLine();
 //						if (!line.isEmpty()) {
-//							temp = line.split(" ----> ");
+//							temp = line.split(" ----> ");													// NEED TO ADD READ FROM FILE
 //							for (String x : temp)
 //								System.out.println(x);
 //							origin = temp[0].substring(0, temp[0].indexOf("(") - 1);
