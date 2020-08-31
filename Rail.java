@@ -42,12 +42,12 @@ public class Rail {
 				boolean found = false;
 				WorkDay tempWD = null;
 				for(WorkDay wd : workDays) {
-					if(f.contains(wd.getDate())) {
+					if(wd.getDate().equalsIgnoreCase(f)) {
 						wd.addItinerary(new Itinerary(a, b, c, d));
 						found = true;
 						tempWD = wd;
+						break;
 					}
-					break;
 				}
 				if(!found) {
 					tempWD = new WorkDay(f);
@@ -158,24 +158,23 @@ public class Rail {
 
 	public static void sortAll() {
 		boolean repeat;
+		int origin=0;
 		Itinerary temp = null;
 		do {
 			repeat = false;
 			for (int k = 0; k < workDays.size(); k++)
 				for (int i = 0; i < workDays.get(k).getItineraries().size() - 1; i++) {
-					for (int j = 0; j < workDays.get(k).getItineraries().get(i).trip.size() - 1; j++) {
-						if (workDays.get(k).getItineraries().get(i).trip.get(j).getHours() > workDays.get(k).getItineraries().get(i).trip.get(j + 1).getHours()) {
+						if (workDays.get(k).getItineraries().get(i).getTrip().get(origin).getHours() > workDays.get(k).getItineraries().get(i+1).getTrip().get(origin).getHours()) {
 							temp = workDays.get(k).getItineraries().set(i, workDays.get(k).getItineraries().get(i + 1));
 							workDays.get(k).getItineraries().set(i + 1, temp);
 							repeat = true;
-						} else if (workDays.get(k).getItineraries().get(i).trip.get(j).getHours() == workDays.get(k).getItineraries().get(i).trip.get(j + 1).getHours())
-							if (workDays.get(k).getItineraries().get(i).trip.get(j).getMinutes() > workDays.get(k).getItineraries().get(i).trip.get(j + 1).getMinutes()) {
+						} else if (workDays.get(k).getItineraries().get(i).getTrip().get(origin).getHours() == workDays.get(k).getItineraries().get(i+1).getTrip().get(origin).getHours())
+							if (workDays.get(k).getItineraries().get(i).getTrip().get(origin).getMinutes() > workDays.get(k).getItineraries().get(i+1).getTrip().get(origin).getMinutes()) {
 								temp = workDays.get(k).getItineraries().set(i, workDays.get(k).getItineraries().get(i + 1));
 								workDays.get(k).getItineraries().set(i + 1, temp);
 								repeat = true;
 							}
 					}
-				}
 		} while (repeat);
 			
 //			WorkDay temp2 = null;
@@ -189,7 +188,7 @@ public class Rail {
 //
 	}
 
-	public static void findTripByDeparture(String origin, String destenation, String date, String time) {
+	public static void findTripByDeparture(String origin, String destination, String date, String time) {
 		
 		WorkDay tempWD = null;
 		boolean found = false,found2=false,isOrigin=false,isDestination=false;
@@ -205,50 +204,7 @@ public class Rail {
 			return;
 		}
 		
-		ArrayList<Itinerary> relevantItineraries = new ArrayList<Itinerary>();
-		
-		for (Itinerary i : tempWD.getItineraries()) {
-			isOrigin=false;
-			isDestination=false;
-			for(Station station : i.getTrip()) {
-				if (station.getName().contains(origin))
-					isOrigin = true;
-				if (station.getName().contains(destenation) && isOrigin)
-					isDestination = true;
-			}
-			if(isOrigin&&isDestination)
-				relevantItineraries.add(i);
-		}
-		
-		for (Itinerary i : relevantItineraries) {
-			for(Station station : i.getTrip()) {
-				if((station.getName().contains(origin) && station.getHours()>=Integer.parseInt(sTime[0]) && (station.getHours()-Integer.parseInt(sTime[0]))<=1)
-					||  ((station.getName().contains(origin) && station.getHours()<=Integer.parseInt(sTime[0]) && (Integer.parseInt(sTime[0])-station.getHours())<=3))) {
-				System.out.println(i.toPartialString(origin,destenation));
-				found2=true;
-				}		
-			}
-		}
-		if(!found2)
-			System.out.println("No trips available for given time.");	
-	}
-	
-	public static void findTripByArrival(String origin, String destination, String date, String time) {
-		
-		WorkDay tempWD = null;
-		boolean found = false,found2=false,isOrigin=false,isDestination=false;
-		String[] sTime = time.split(":");
-		
-		for(WorkDay wd : workDays)
-			if(wd.getDate().contains(date)) {
-				tempWD = wd;
-				found = true;
-			}
-		if(!found) {
-			System.out.println("No trains available that day.");
-			return;
-		}
-		
+		ArrayList<Itinerary> relevantStations = new ArrayList<Itinerary>();
 		ArrayList<Itinerary> relevantItineraries = new ArrayList<Itinerary>();
 		
 		for (Itinerary i : tempWD.getItineraries()) {
@@ -261,19 +217,124 @@ public class Rail {
 					isDestination = true;
 			}
 			if(isOrigin&&isDestination)
-				relevantItineraries.add(i);
+				relevantStations.add(i);
 		}
 		
-		for (Itinerary i : relevantItineraries) {
+		int relevantBefore=0,relevantAfter=0;
+		boolean A=false,B=false;
+		
+		for (Itinerary i : relevantStations)
 			for(Station station : i.getTrip()) {
-				if((station.getName().contains(destination) && station.getHours()>=Integer.parseInt(sTime[0]) && (station.getHours()-Integer.parseInt(sTime[0]))<=1)
-					||  ((station.getName().contains(destination) && station.getHours()<=Integer.parseInt(sTime[0]) && (Integer.parseInt(sTime[0])-station.getHours())<=3))) {
-				System.out.println(i.toPartialString(origin,destination));
-				found2=true;
+				if((station.getName().contains(origin) && station.getHours()>=Integer.parseInt(sTime[0]) && (station.getHours()-Integer.parseInt(sTime[0]))<=1)) {
+					A=true;
+					relevantAfter++;
 				}
+				if((station.getName().contains(origin) && station.getHours()<=Integer.parseInt(sTime[0]) && (Integer.parseInt(sTime[0])-station.getHours())<=3)) {
+					B=true;
+					relevantBefore++;
+				}
+				
+				if(A||B) {
+					relevantItineraries.add(i);
+					A=false;
+					B=false;
+					found2=true;
+				}
+			}
+		
+		int counter=0;
+		int printed = 0;
+		int until = 2;
+		if(relevantAfter==0)
+			until = 3;
+		
+		for (Itinerary i : relevantItineraries) {
+			counter++;
+			if(relevantBefore-counter<until && relevantBefore-counter>=0) {
+				printed++;
+				System.out.println(i.toPartialString(origin,destination));
+			}
+			else if(relevantBefore-counter<0 && printed<3) {
+				printed++;
+				System.out.println(i.toPartialString(origin,destination));
 			}
 		}
 		if(!found2)
-			System.out.println("No trips available for given time.");
+			System.out.println("No trips available for given time.");	
+	}
+	
+public static void findTripByArrival(String origin, String destination, String date, String time) {
+		
+		WorkDay tempWD = null;
+		boolean found = false,found2=false,isOrigin=false,isDestination=false;
+		String[] sTime = time.split(":");
+		
+		for(WorkDay wd : workDays)
+			if(wd.getDate().contains(date)) {
+				tempWD = wd;
+				found = true;
+			}
+		if(!found) {
+			System.out.println("No trains available that day.");
+			return;
+		}
+		
+		ArrayList<Itinerary> relevantStations = new ArrayList<Itinerary>();
+		ArrayList<Itinerary> relevantItineraries = new ArrayList<Itinerary>();
+		
+		for (Itinerary i : tempWD.getItineraries()) {
+			isOrigin=false;
+			isDestination=false;
+			for(Station station : i.getTrip()) {
+				if (station.getName().contains(origin))
+					isOrigin = true;
+				if (station.getName().contains(destination) && isOrigin)
+					isDestination = true;
+			}
+			if(isOrigin&&isDestination)
+				relevantStations.add(i);
+		}
+		
+		int relevantBefore=0,relevantAfter=0;
+		boolean A=false,B=false;
+		
+		for (Itinerary i : relevantStations)
+			for(Station station : i.getTrip()) {
+				if((station.getName().contains(destination) && station.getHours()>=Integer.parseInt(sTime[0]) && (station.getHours()-Integer.parseInt(sTime[0]))<=1)) {
+					A=true;
+					relevantBefore++;
+				}
+				if((station.getName().contains(destination) && station.getHours()<=Integer.parseInt(sTime[0]) && (Integer.parseInt(sTime[0])-station.getHours())<=3)) {
+					B=true;
+					relevantAfter++;
+				}
+				
+				if(A||B) {
+					relevantItineraries.add(i);
+					A=false;
+					B=false;
+					found2=true;
+				}
+			}
+		
+		int counter=0;
+		int printed = 0;
+		int until = 2;
+		if(relevantAfter==0)
+			until = 3;
+		
+		for (Itinerary i : relevantItineraries) {
+			counter++;
+			if(relevantBefore-counter<until && relevantBefore-counter>=0) {
+				printed++;
+				System.out.println(i.toPartialString(origin,destination));
+			}
+			else if(relevantBefore-counter<0 && printed<3) {
+				printed++;
+				System.out.println(i.toPartialString(origin,destination));
+			}
+		}
+		if(!found2)
+			System.out.println("No trips available for given time.");	
 	}
 }
