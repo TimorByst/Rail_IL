@@ -1,5 +1,7 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,7 +21,6 @@ public class Rail {
 			System.out.println(
 					"How would you like to proceed?\n" + "(1) Append itinerary.\n" + "(2) Display all itineraries.\n"
 							+ "(3) Find Trip. \n" + "(4) Save Existing Itineraries to file. (WILL OVERWRITE!)\n"
-//                          + "(5) Load From Itineraries file\n"
 							+ "(9) Exit program.");
 
 			choice = Integer.parseInt(input.nextLine());
@@ -104,10 +105,11 @@ public class Rail {
 			case 4:
 				System.out.println("====================Saving File===================");
 				try {
-					PrintWriter write = new PrintWriter(new FileOutputStream("./output.txt",false));
-					for(WorkDay wd : workDays)
+					PrintWriter write = new PrintWriter(new FileOutputStream("./Output_File.txt",false));
+					for(WorkDay wd : workDays) {
 						if (wd.getItineraries().size() > 0) {
-							write = new PrintWriter(new FileOutputStream("./output.txt",true));
+							write = new PrintWriter(new FileOutputStream("./Output_File.txt",true));
+							write.println("[WDstart]" + wd.getDate());
 							for (Itinerary i : wd.getItineraries()) {
 								write.println(i.toString());
 							}
@@ -116,6 +118,7 @@ public class Rail {
 						}
 						else
 							System.out.println("Fill in some itineraries first.");
+					}
 				} catch (FileNotFoundException e) {
 					System.out.println("OUTPUT FILE NOT FOUND!");
 					e.printStackTrace();
@@ -124,31 +127,7 @@ public class Rail {
 				System.out.println("SAVED SUCCESSFULLY!");
 				break;
 
-//			case 5: 
-//				try {
-//					Scanner read = new Scanner(new File("./output.txt"));
-//					String line, origin, t1, des, t2;
-//					String temp[];
-//					while (read.hasNext()) {
-//						line = read.nextLine();
-//						if (!line.isEmpty()) {
-//							temp = line.split(" ----> ");													// NEED TO ADD READ FROM FILE
-//							for (String x : temp)
-//								System.out.println(x);
-//							origin = temp[0].substring(0, temp[0].indexOf("(") - 1);
-//							t1 = temp[0].substring(temp[0].indexOf("(") + 1, temp[0].indexOf(")"));
-//							des = temp[1].substring(0, temp[1].indexOf("(") - 1);
-//							t2 = temp[1].substring(temp[1].indexOf("(") + 1, temp[1].indexOf(")"));
-//							allItineraries.add(new Itinerary(origin, t1, des, t2));
-//						}
-//					}
-//					read.close();
-//					System.out.println("LOADED SUCCESSFULLY!");
-//				} catch (FileNotFoundException e) {
-//					System.out.println("READ FILE NOT FOUND!");
-//					e.printStackTrace();
-//				}
-//				break;
+		
 			}
 		} while (choice != 9);
 		System.out.println(
