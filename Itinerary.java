@@ -48,4 +48,26 @@ public class Itinerary {
 		sb.deleteCharAt(sb.length()-1);
 		return sb.toString();
 		}
+	
+	public String toPartialStringHTML(String a, String b) {
+		StringBuilder sb = new StringBuilder();
+		boolean flag=false;
+		for(Station station : trip) {
+			if(station.getName().contains(a))
+				sb.append("<p>" + station.getName() + " (" + station.getTime() + ") ---> ");
+			else if(station.getName().contains(b))
+				sb.append(station.getName() + " (" + station.getTime() + ")<br>");
+		}
+		for(Station station : trip) {
+			if(station.getName().contains(b))
+				flag = false;
+			if(flag)
+				sb.append("--- " + station.getName() + " (" + station.getTime() + ")<br>");
+			if(station.getName().contains(a))
+				flag = true;
+		}
+		sb.deleteCharAt(sb.length()-1);
+		sb.append("</p>");
+		return sb.toString();
+		}
 }

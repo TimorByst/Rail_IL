@@ -1,7 +1,5 @@
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -92,7 +90,7 @@ public class Rail {
 				if (input.nextLine().contains("1")) {
 					System.out.println("Please enter time of departure: ");
 					System.out.println("==================Relevant Trips===================");
-					findTripByDeparture(originStation, destinationStation, date, input.nextLine());
+					findTripByDeparture(originStation, destinationStation, date, input.nextLine(),false);
 				}
 				else {
 					System.out.println("Please enter time of arrival: ");
@@ -126,8 +124,7 @@ public class Rail {
 				}
 				System.out.println("SAVED SUCCESSFULLY!");
 				break;
-
-		
+				
 			}
 		} while (choice != 9);
 		System.out.println(
@@ -167,7 +164,7 @@ public class Rail {
 //
 	}
 
-	public static void findTripByDeparture(String origin, String destination, String date, String time) {
+	public static ArrayList<String> findTripByDeparture(String origin, String destination, String date, String time, boolean isHTML) {
 		
 		WorkDay tempWD = null;
 		boolean found = false,found2=false,isOrigin=false,isDestination=false;
@@ -179,8 +176,12 @@ public class Rail {
 				found = true;
 			}
 		if(!found) {
-			System.out.println("No trains available that day.");
-			return;
+			if(isHTML)
+				return null;
+			else
+				System.out.println("No trains available that day.");
+			
+			return null;
 		}
 		
 		ArrayList<Itinerary> relevantStations = new ArrayList<Itinerary>();
@@ -227,19 +228,31 @@ public class Rail {
 		if(relevantAfter==0)
 			until = 3;
 		
+		ArrayList<String> text = new ArrayList<String>();
+		
 		for (Itinerary i : relevantItineraries) {
 			counter++;
 			if(relevantBefore-counter<until && relevantBefore-counter>=0) {
 				printed++;
-				System.out.println(i.toPartialString(origin,destination));
+				if(isHTML)
+					text.add(i.toPartialStringHTML(origin,destination));	
+				else
+					System.out.println(i.toPartialString(origin,destination));
 			}
 			else if(relevantBefore-counter<0 && printed<3) {
 				printed++;
-				System.out.println(i.toPartialString(origin,destination));
+				if(isHTML)
+					text.add(i.toPartialStringHTML(origin,destination));
+				else
+					System.out.println(i.toPartialString(origin,destination));
 			}
 		}
+		if(isHTML)
+			return text;
 		if(!found2)
 			System.out.println("No trips available for given time.");	
+		
+		return null;
 	}
 	
 public static void findTripByArrival(String origin, String destination, String date, String time) {
