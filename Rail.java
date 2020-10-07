@@ -95,7 +95,7 @@ public class Rail {
 				else {
 					System.out.println("Please enter time of arrival: ");
 					System.out.println("==================Relevant Trips===================");
-					findTripByArrival(originStation, destinationStation, date, input.nextLine());
+					findTripByArrival(originStation, destinationStation, date, input.nextLine(),false);
 				}
 
 				break;
@@ -255,7 +255,7 @@ public class Rail {
 		return null;
 	}
 	
-public static void findTripByArrival(String origin, String destination, String date, String time) {
+public static ArrayList<String> findTripByArrival(String origin, String destination, String date, String time, boolean isHTML) {
 		
 		WorkDay tempWD = null;
 		boolean found = false,found2=false,isOrigin=false,isDestination=false;
@@ -267,9 +267,14 @@ public static void findTripByArrival(String origin, String destination, String d
 				found = true;
 			}
 		if(!found) {
-			System.out.println("No trains available that day.");
-			return;
+			if(isHTML)
+				return null;
+			else
+				System.out.println("No trains available that day.");
+			
+			return null;
 		}
+		
 		
 		ArrayList<Itinerary> relevantStations = new ArrayList<Itinerary>();
 		ArrayList<Itinerary> relevantItineraries = new ArrayList<Itinerary>();
@@ -315,18 +320,30 @@ public static void findTripByArrival(String origin, String destination, String d
 		if(relevantAfter==0)
 			until = 3;
 		
+		ArrayList<String> text = new ArrayList<String>();
+		
 		for (Itinerary i : relevantItineraries) {
 			counter++;
 			if(relevantBefore-counter<until && relevantBefore-counter>=0) {
 				printed++;
-				System.out.println(i.toPartialString(origin,destination));
+				if(isHTML)
+					text.add(i.toPartialStringHTML(origin,destination));	
+				else
+					System.out.println(i.toPartialString(origin,destination));
 			}
 			else if(relevantBefore-counter<0 && printed<3) {
 				printed++;
-				System.out.println(i.toPartialString(origin,destination));
+				if(isHTML)
+					text.add(i.toPartialStringHTML(origin,destination));
+				else
+					System.out.println(i.toPartialString(origin,destination));
 			}
 		}
+		if(isHTML)
+			return text;
 		if(!found2)
 			System.out.println("No trips available for given time.");	
+		
+		return null;
 	}
 }
